@@ -83,24 +83,6 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 			hasMembership = true;
 			membershipNumber = cardSwipe.getNumber();
 		}
-		if (card.isTapEnabled == true) {
-			CardTapData cardTap = card.tap();
-			if (cardTap.getType() == "Membership") {
-				hasMembership = true;
-				membershipNumber = cardTap.getNumber();
-			}
-		}
-		if (card.hasChip == false) {
-			CardInsertData cardInsert = card.insert(null);
-			if (cardInsert.getType() == "Membership") {
-				hasMembership = true;
-				membershipNumber = cardInsert.getNumber();
-			}
-		}
-		
-		
-		
-		
 		
 	}
 	public void returnToScanning() {
