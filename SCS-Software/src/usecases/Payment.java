@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 import org.lsmr.selfcheckout.*;
+import org.lsmr.selfcheckout.Card.CardData;
 import org.lsmr.selfcheckout.Card.CardInsertData;
 import org.lsmr.selfcheckout.Card.CardSwipeData;
 import org.lsmr.selfcheckout.Card.CardTapData;
@@ -78,10 +79,10 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	
 	
 	public void checkMembership (Card card) throws IOException {
-		CardSwipeData cardSwipe = card.swipe();
-		if (cardSwipe.getType() == "Membership") {
+		CardData cardData = station.cardReader.swipe(card);
+		if (cardData.getType() == "Membership") {
 			hasMembership = true;
-			membershipNumber = cardSwipe.getNumber();
+			membershipNumber = cardData.getNumber();
 		}
 		
 	}
