@@ -26,8 +26,8 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	
 	public AddItem(SelfCheckoutStation scs){
 		checkoutStation = scs;
-		checkoutStation.scanner.attach(this);
-		checkoutStation.scale.attach(this);
+		checkoutStation.mainScanner.attach(this);					//TODO : Need to change scanner to mainScanner and / or handheldScanner
+		checkoutStation.scanningArea.attach(this);					//TODO : Need to change scale to baggingArea and / or scanningArea
 		scannedItemsCatalog = new StringBuilder();
 		scannedItems = new ArrayList<>();
 	}
@@ -113,12 +113,12 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 
 	@Override
 	public void outOfOverload(ElectronicScale scale) {
-		checkoutStation.scanner.enable();
+		checkoutStation.mainScanner.enable();						//TODO : Need to change scanner to mainScanner and / or handheldScanner
 	}
 	
 	public void disableAllButScale(){
-		checkoutStation.scale.enable();
-		checkoutStation.scanner.disable();
+		checkoutStation.scanningArea.enable();								//TODO : Need to change scale to baggingArea and / or scanningArea
+		checkoutStation.mainScanner.disable();							//TODO : Need to change scanner to mainScanner and / or handheldScanner
 		checkoutStation.banknoteInput.disable();
 		checkoutStation.coinSlot.disable();
 		checkoutStation.banknoteValidator.disable();
