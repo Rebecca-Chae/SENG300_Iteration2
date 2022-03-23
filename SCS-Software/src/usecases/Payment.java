@@ -1,10 +1,13 @@
 package usecases;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Currency;
 
-
-
+import org.lsmr.selfcheckout.*;
+import org.lsmr.selfcheckout.Card.CardInsertData;
+import org.lsmr.selfcheckout.Card.CardSwipeData;
+import org.lsmr.selfcheckout.Card.CardTapData;
 import org.lsmr.selfcheckout.devices.*;
 import org.lsmr.selfcheckout.devices.observers.*;
 
@@ -13,6 +16,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	private double amountDue;
 	private double amountPaid;
 	private boolean isCheckingOut; //Not currently used other than being updated but could be useful for future iterations.
+	private boolean hasMembership;
+	private String membershipNumber;
 	
 	public Payment(SelfCheckoutStation checkout) {
 		station = checkout;
@@ -21,6 +26,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		
 		isCheckingOut = false;
 		
+		station.cardReader.disable();
 		station.banknoteValidator.disable();
 		station.coinValidator.disable();
 		station.printer.addPaper(500);
@@ -35,6 +41,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		station.mainScanner.disable();											//TODO : Need to change scanner to mainScanner and / or handheldScanner
 		station.banknoteValidator.enable();
 		station.coinValidator.enable();
+		station.cardReader.enable();
 		System.out.println("Please proceed to checking out.");
 	}
 	
@@ -69,6 +76,33 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	@Override
 	public void invalidBanknoteDetected(BanknoteValidator validator) {}
 	
+	
+	public void checkMembership (Card card) throws IOException {
+		CardSwipeData cardSwipe = card.swipe();
+		if (cardSwipe.getType() == "Membership") {
+			hasMembership = true;
+			membershipNumber = cardSwipe.getNumber();
+		}
+		if (card.isTapEnabled == true) {
+			CardTapData cardTap = card.tap();
+			if (cardTap.getType() == "Membership") {
+				hasMembership = true;
+				membershipNumber = cardTap.getNumber();
+			}
+		}
+		if (card.hasChip == false) {
+			CardInsertData cardInsert = card.insert(null);
+			if (cardInsert.getType() == "Membership") {
+				hasMembership = true;
+				membershipNumber = cardInsert.getNumber();
+			}
+		}
+		
+		
+		
+		
+		
+	}
 	public void returnToScanning() {
 		//any amount inserted would be returned or stored. but this is not implemented yet as not required in this iteration.
 		isCheckingOut = false;
@@ -79,6 +113,12 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	}
 	
 	public void checkoutFinished() {
+		if (hasMembership == true) {
+			char [] memberNumber = membershipNumber.toCharArray();
+			for (char ch: memberNumber) {
+				station.printer.print(ch);
+			}
+		}
 		char [] scannedItems = AddItem.getScannedItemsCatalog().toCharArray();
 		for(char ch: scannedItems) {
 			station.printer.print(ch);
