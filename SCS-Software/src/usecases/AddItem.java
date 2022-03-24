@@ -40,6 +40,19 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		return totalPrice;
 	}
 
+	// Customer adds their own bag to the bagging area
+	public void addOwnBag() {
+	
+	}
+	
+	public void removeBag() {
+		
+	}
+	
+	// Customer fails to place item in bagging area
+	public void failPlacing() {
+		
+	}
 	
 	@Override
 	public void enabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
@@ -102,6 +115,11 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		else {
 			totalWeight += expectedWeight;
 		}
+		
+	}
+	
+	// Customer adds additional items after partial payment
+	public void afterPartialPayment() {
 		
 	}
 
