@@ -77,6 +77,10 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	@Override
 	public void invalidBanknoteDetected(BanknoteValidator validator) {}
 	
+	// Return change after calculate it
+	public void getChange() {
+		
+	}
 	
 	public void checkMembership (Card card) throws IOException {
 		CardData cardData = station.cardReader.swipe(card);
@@ -84,8 +88,39 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 			hasMembership = true;
 			membershipNumber = cardData.getNumber();
 		}
+	}
+	
+	// Probably we can merge swipe/tap/insert methods together but I'm not sure how to check if the card is debit or credit
+	public void debitCardWithSwipe(Card card) throws IOException {
+		CardData cardData = station.cardReader.swipe(card);
+		// check if the card could be used
+	}
+	
+	public void debitCardWithTap(Card card) throws IOException {
+		CardData cardData = station.cardReader.tap(card);
 		
 	}
+	
+	public void debitCardWithInsert(Card card, String cardholder) throws IOException {
+		CardData cardData = station.cardReader.insert(card, cardholder);
+		
+	}
+	
+	public void creditCardWithSwipe(Card card) throws IOException {
+		CardData cardData = station.cardReader.swipe(card);
+		// check if the card could be used
+	}
+	
+	public void creditCardWithTap(Card card) throws IOException {
+		CardData cardData = station.cardReader.tap(card);
+		
+	}
+	
+	public void creditCardWithInsert(Card card, String cardholder) throws IOException {
+		CardData cardData = station.cardReader.insert(card, cardholder);
+		
+	}
+	
 	public void returnToScanning() {
 		//any amount inserted would be returned or stored. but this is not implemented yet as not required in this iteration.
 		isCheckingOut = false;
