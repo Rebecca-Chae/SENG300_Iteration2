@@ -65,6 +65,11 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 
 	@Override
 	public void invalidCoinDetected(CoinValidator validator) {}
+	
+	//use case for returning change to the customer, if they pay with coins
+	public void returnChange() {
+		
+	}
 
 	@Override
 	public void validBanknoteDetected(BanknoteValidator validator, Currency currency, int value) {
