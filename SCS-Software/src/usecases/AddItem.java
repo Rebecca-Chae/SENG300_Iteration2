@@ -41,8 +41,8 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	}
 
 	// Customer adds their own bag to the bagging area
-	public void addOwnBag() {
-	
+	public void addOwnBag(double bagWeight) {
+		totalWeight = totalWeight - bagWeight;
 	}
 	
 	public void removeBag() {
@@ -119,8 +119,11 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	}
 	
 	// Customer adds additional items after partial payment
-	public void afterPartialPayment() {
+	public void afterPartialPayment(BarcodeScanner barcodeScanner, Barcode barcode) {		
+		double tempTotal = totalPrice;
+		barcodeScanned(barcodeScanner, barcode);
 		
+		totalPrice = totalPrice - tempTotal;
 	}
 
 	@Override
