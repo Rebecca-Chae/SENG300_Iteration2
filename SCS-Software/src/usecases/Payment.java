@@ -90,34 +90,41 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		}
 	}
 	
-	// Probably we can merge swipe/tap/insert methods together but I'm not sure how to check if the card is debit or credit
-	public void debitCardWithSwipe(Card card) throws IOException {
-		CardData cardData = station.cardReader.swipe(card);
-		// check if the card could be used
+	public void cardWithSwipe(Card card, double amount) {
+		CardData cardData;
+		try {
+			cardData = station.cardReader.swipe(card);
+			
+			if (cardData.getType() == "DEBIT") {
+				// Check the card info
+						
+			} else if (cardData.getType() == "CREDIT") {
+				// Check the card info
+				
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		amountPaid += amount;
 	}
 	
-	public void debitCardWithTap(Card card) throws IOException {
-		CardData cardData = station.cardReader.tap(card);
+	public void cardWithTap(Card card) {
+		try {
+			CardData cardData = station.cardReader.tap(card);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
-	public void debitCardWithInsert(Card card, String cardholder) throws IOException {
-		CardData cardData = station.cardReader.insert(card, cardholder);
-		
-	}
-	
-	public void creditCardWithSwipe(Card card) throws IOException {
-		CardData cardData = station.cardReader.swipe(card);
-		// check if the card could be used
-	}
-	
-	public void creditCardWithTap(Card card) throws IOException {
-		CardData cardData = station.cardReader.tap(card);
-		
-	}
-	
-	public void creditCardWithInsert(Card card, String cardholder) throws IOException {
-		CardData cardData = station.cardReader.insert(card, cardholder);
+	public void cardWithInsert(Card card, String cardholder) {
+		try {
+			CardData cardData = station.cardReader.insert(card, cardholder);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

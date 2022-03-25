@@ -2,18 +2,13 @@ package usecases;
 
 
 import java.math.BigDecimal;
+
 import java.util.ArrayList;
 
-import org.lsmr.selfcheckout.Barcode;
-import org.lsmr.selfcheckout.BarcodedItem;
-import org.lsmr.selfcheckout.devices.AbstractDevice;
-import org.lsmr.selfcheckout.devices.BarcodeScanner;
-import org.lsmr.selfcheckout.devices.ElectronicScale;
-import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
-import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
-import org.lsmr.selfcheckout.devices.observers.BarcodeScannerObserver;
-import org.lsmr.selfcheckout.devices.observers.ElectronicScaleObserver;
-import org.lsmr.selfcheckout.products.BarcodedProduct;
+import org.lsmr.selfcheckout.*;
+import org.lsmr.selfcheckout.devices.*;
+import org.lsmr.selfcheckout.devices.observers.*;
+import org.lsmr.selfcheckout.products.*;
 
 public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver {
 	
@@ -28,6 +23,7 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		checkoutStation = scs;
 		checkoutStation.mainScanner.attach(this);					//TODO : Need to change scanner to mainScanner and / or handheldScanner
 		checkoutStation.scanningArea.attach(this);					//TODO : Need to change scale to baggingArea and / or scanningArea
+		checkoutStation.baggingArea.attach(this);						// Not so sure if this is necessary but just added for now
 		scannedItemsCatalog = new StringBuilder();
 		scannedItems = new ArrayList<>();
 	}
@@ -40,18 +36,28 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		return totalPrice;
 	}
 
-	// Customer adds their own bag to the bagging area
-	public void addOwnBag(double bagWeight) {
-		totalWeight = totalWeight - bagWeight;
-	}
-	
-	public void removeBag() {
+	public void addOwnBag(Item bag) {
+		// Customer adds their own bag to the bagging area
+		if (bag == null) {
+			throw new SimulationException("The bag is null.");
+		}
+		checkoutStation.baggingArea.add(bag);
 		
+		//totalWeight = totalWeight - bagWeight;
 	}
 	
-	// Customer fails to place item in bagging area
 	public void failPlacing() {
+		// Customer fails to place item in bagging area
+			// => The bagging area + following services disabled/locked?
+			// not sure if we have to worry about enabling/unlocking
 		
+		checkoutStation.scanningArea.disable();							//TODO : Need to change scale to baggingArea and / or scanningArea
+		checkoutStation.baggingArea.disable();
+		checkoutStation.mainScanner.disable();							//TODO : Need to change scanner to mainScanner and / or handheldScanner
+		checkoutStation.banknoteInput.disable();
+		checkoutStation.coinSlot.disable();
+		checkoutStation.banknoteValidator.disable();
+		checkoutStation.coinValidator.disable();
 	}
 	
 	@Override
