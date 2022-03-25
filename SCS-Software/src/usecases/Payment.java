@@ -2,7 +2,9 @@ package usecases;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Currency;
+import java.util.List;
 
 import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.Card.CardData;
@@ -77,10 +79,32 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	@Override
 	public void invalidBanknoteDetected(BanknoteValidator validator) {}
 	
-	// Return change after calculate it
-	public void getChange() {
+	// Return change after calculating it
+	public BigDecimal getChange(BigDecimal cost, BigDecimal paid) {
+		if (paid.intValue()>cost.intValue()) {
+			throw new InternalError("Bad call to function getChange: cost is greater than payment");
+		}
 		
+		BigDecimal changeAmt = cost.subtract(paid);
+		List<BigDecimal> denoms = station.coinDenominations;
+		Collections.sort(denoms, Collections.reverseOrder()); // sort the list of denominations in descending order
+		
+		// greedy method to return coins equal to (or as close as possible to) changeAmt
+		for(BigDecimal denom : denoms) { // for each denomination, starting with the largest
+			while(changeAmt.subtract(denom).intValue() >= 0) { // if subtracting that denom from changeAmt is still positive, keep doing it
+				try {
+					station.coinDispensers.get(denom).emit();
+				} catch (OverloadException | EmptyException | DisabledException e) {
+					e.printStackTrace();
+				}
+				// emit the coin to the tray
+				changeAmt = changeAmt.subtract(denom); // subtract from total
+			}
+		}	
+		
+		return changeAmt; // changeAmt still may not be zero, if the denominations do not allow for the exact change to be returned.
 	}
+	
 	
 	public void checkMembership (Card card) throws IOException {
 		CardData cardData = station.cardReader.swipe(card);
