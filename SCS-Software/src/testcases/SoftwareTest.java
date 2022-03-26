@@ -413,6 +413,57 @@ public class SoftwareTest {
 		
 	}
 	
+	@Test
+	public void testScanMembershipCard() {
+		
+	}
 	
+	@Test
+	public void testReceiveChange() {
+		
+	}
+	
+	// tests paying with tap
+	@Test
+	public void testTapCredit() {
+		
+	}
+	
+	@Test
+	public void testTapDebit() {
+		
+	}
+	
+	// tests paying with swipe
+	@Test
+	public void testSwipeCredit() {
+		
+	}
+	
+	@Test
+	public void testSwipeDebit() {
+		
+	}
+	
+	// tests paying with insert
+	@Test
+	public void testInsertCredit() {
+		
+	}
+	
+	@Test
+	public void testInsertDebit() {
+		
+	}
+	
+	@Test
+	public void testFailToPlaceItem() {
+		
+	}
+	
+	@Test
+	public void testAddItemAfterPartialPayment() {
+		
+	}
 	
 }
