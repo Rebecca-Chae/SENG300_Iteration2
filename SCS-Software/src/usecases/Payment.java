@@ -22,6 +22,9 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	private boolean hasMembership;
 	private String membershipNumber;
 	private String member;
+	private String cardNumber;
+	private String cardholder;
+	private String cvv;
 	
 	public Payment(SelfCheckoutStation checkout) {
 		station = checkout;
@@ -82,7 +85,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	
 	// Return change after calculating it
 	public BigDecimal getChange(BigDecimal cost, BigDecimal paid) {
-		if (paid.intValue()>cost.intValue()) {
+		if (paid.intValue() > cost.intValue()) {
 			throw new InternalError("Bad call to function getChange: cost is greater than payment");
 		}
 		
@@ -102,10 +105,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 				changeAmt = changeAmt.subtract(denom); // subtract from total
 			}
 		}	
-		
 		return changeAmt; // changeAmt still may not be zero, if the denominations do not allow for the exact change to be returned.
 	}
-	
 	
 	public void checkMembership (Card card) throws IOException {
 		CardData cardData = station.cardReader.swipe(card);
@@ -121,37 +122,72 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		try {
 			cardData = station.cardReader.swipe(card);
 			
-			if (cardData.getType() == "DEBIT") {
-				// Check the card info
-						
-			} else if (cardData.getType() == "CREDIT") {
-				// Check the card info
-				
+			if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
+				cardholder = cardData.getCardholder();
+				cardNumber = cardData.getNumber();
+				cvv = cardData.getCVV();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		amountPaid += amount;
+		
+		if (checkValidation(cardholder, cardNumber, cvv)) {
+			amountPaid += amount;			
+		}
 	}
-	
-	public void cardWithTap(Card card) {
+
+	public void cardWithTap(Card card, double amount) {
+		CardData cardData;
 		try {
-			CardData cardData = station.cardReader.tap(card);
+			cardData = station.cardReader.tap(card);
+			
+			if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
+				cardholder = cardData.getCardholder();
+				cardNumber = cardData.getNumber();
+				cvv = cardData.getCVV();
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		if (checkValidation(cardholder, cardNumber, cvv)) {
+			amountPaid += amount;			
+		}
 	}
 	
-	public void cardWithInsert(Card card, String cardholder) {
+	public void cardWithInsert(Card card, String holder, double amount) {
+		CardData cardData;
+		cardholder = holder;
 		try {
-			CardData cardData = station.cardReader.insert(card, cardholder);
+			cardData = station.cardReader.insert(card, holder);
+			
+			if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
+				cardNumber = cardData.getNumber();
+				cvv = cardData.getCVV();
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		if (checkValidation(cardholder, cardNumber, cvv)) {
+			amountPaid += amount;			
+		}
+	}
+	
+	private boolean checkValidation(String holder, String number, String value) {
+		// Check the card holder
+		if (holder == null || holder == "") {
+			return false;
+		}
+		// Check the card number
+		if (number == null || number == "") {
+			return false;
+		}
+		// Check the cvv (card verification value)
+		if (value == null || value.length() < 3) {
+			return false;
+		}
+		return true;
 	}
 	
 	public void returnToScanning() {
