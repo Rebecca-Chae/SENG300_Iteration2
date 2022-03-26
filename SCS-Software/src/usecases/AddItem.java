@@ -108,6 +108,7 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		scannedItems.remove(aBarcode);
 	}
 	
+	// checks fail to place item
 	@Override
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
 		while(weightInGrams != expectedWeight) {		
