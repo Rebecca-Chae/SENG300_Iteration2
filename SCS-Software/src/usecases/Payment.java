@@ -155,18 +155,17 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		}
 	}
 	
-	public void cardWithInsert(Card card, String holder, String pin, double amount) {
-		CardData cardData;
-		cardholder = holder;
-		
+	public void cardWithInsert(Card card,  String pin, double amount) {
 		if (pin == null) {
 			throw new SimulationException("The card has no chip."); 
 		}
 		
+		CardData cardData;
 		try {
 			cardData = station.cardReader.insert(card, pin);
 			
 			if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
+				cardholder = cardData.getCardholder();
 				cardNumber = cardData.getNumber();
 				cvv = cardData.getCVV();
 			}
