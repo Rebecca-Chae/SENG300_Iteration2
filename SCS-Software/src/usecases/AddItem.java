@@ -46,20 +46,6 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		//totalWeight = totalWeight - bagWeight;
 	}
 	
-	public void failPlacing() {
-		// Customer fails to place item in bagging area
-			// => The bagging area + following services disabled/locked?
-			// not sure if we have to worry about enabling/unlocking
-		
-		checkoutStation.scanningArea.disable();							//TODO : Need to change scale to baggingArea and / or scanningArea
-		checkoutStation.baggingArea.disable();
-		checkoutStation.mainScanner.disable();							//TODO : Need to change scanner to mainScanner and / or handheldScanner
-		checkoutStation.banknoteInput.disable();
-		checkoutStation.coinSlot.disable();
-		checkoutStation.banknoteValidator.disable();
-		checkoutStation.coinValidator.disable();
-	}
-	
 	@Override
 	public void enabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
 	}
