@@ -21,6 +21,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	private boolean isCheckingOut; //Not currently used other than being updated but could be useful for future iterations.
 	private boolean hasMembership;
 	private String membershipNumber;
+	private String member;
 	
 	public Payment(SelfCheckoutStation checkout) {
 		station = checkout;
@@ -108,9 +109,10 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	
 	public void checkMembership (Card card) throws IOException {
 		CardData cardData = station.cardReader.swipe(card);
-		if (cardData.getType() == "Membership") {
+		if (cardData.getType() == "MEMBERSHIP") {
 			hasMembership = true;
 			membershipNumber = cardData.getNumber();
+			member = "Membership #";
 		}
 	}
 	
@@ -163,6 +165,10 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	
 	public void checkoutFinished() {
 		if (hasMembership == true) {
+			char [] memberProof = member.toCharArray();
+			for (char ch: memberProof) {
+				station.printer.print(ch);
+			}
 			char [] memberNumber = membershipNumber.toCharArray();
 			for (char ch: memberNumber) {
 				station.printer.print(ch);
