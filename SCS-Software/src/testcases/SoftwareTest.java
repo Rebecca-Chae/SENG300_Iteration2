@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
+import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SimulationException;
@@ -20,6 +21,28 @@ import org.lsmr.selfcheckout.products.BarcodedProduct;
 import usecases.AddItem;
 import usecases.Inventory;
 import usecases.Payment;
+
+// Stub class to cover cases that need the Item class
+class ItemToTest extends Item { //This covers Item class
+
+    private final double weight;
+
+    /**
+     * Constructs an item with the indicated weight.
+     *
+     * @param weightInGrams The weight of the item.
+     * @throws SimulationException If the weight is &le;0.
+     */
+    protected ItemToTest(double weightInGrams) {
+        super(weightInGrams);
+        this.weight = weightInGrams;
+    }
+
+    @Override
+    public double getWeight() {
+        return weight;
+    }
+}
 
 public class SoftwareTest {
 
@@ -470,8 +493,18 @@ public class SoftwareTest {
 	// Tests adding a null bag to the bagging area
 	@Test
 	public void testAddBagNull() {
-		;
 		assertThrows(SimulationException.class, () -> {dummyAddItem.addOwnBag(null);  });
+	}
+	
+	// test to check adding a valid bag with own weight
+	// TODO : want to check if bag is updating the weight properly
+	// TODO : currently test cases are covering the addBag method
+	@Test
+	public void testAddBagValid() {
+		ItemToTest dummyBag = new ItemToTest(10.0);
+		dummyAddItem.addOwnBag(dummyBag);
+		dummyAddItem.weightChanged(testStation.baggingArea, 10);
+
 	}
 	
 	// Testcase for instantiating inventory class (used for coverage)

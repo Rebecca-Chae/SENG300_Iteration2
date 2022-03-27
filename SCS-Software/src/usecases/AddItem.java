@@ -43,6 +43,7 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		}
 		checkoutStation.baggingArea.add(bag);
 		
+		// TODO : Possibly need to delete comment below
 		//totalWeight = totalWeight - bagWeight;
 	}
 	
