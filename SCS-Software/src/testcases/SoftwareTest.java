@@ -2,6 +2,8 @@ package testcases;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException; 
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -14,6 +16,7 @@ import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.Numeral;
+import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
 import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
@@ -54,6 +57,7 @@ public class SoftwareTest {
 	private static Payment dummyPayment;
 	private static AddItem dummyAddItem;
 	private static Currency testCurrency;
+	private static Card card;
 
 	
 	@BeforeClass
@@ -438,13 +442,15 @@ public class SoftwareTest {
 	}
 	
 	@Test
-	public void testScanMembershipCard() {
-		
+	public void testScanMembershipCard() throws IOException {
+		card = new Card("MEMBERSHIP", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.checkMembership(card);
+		Assert.assertTrue("00000" == dummyPayment.getMembership());
 	}
 	
 	@Test
-	public void testReceiveChange() {
-		
+	public void testReceiveChange_withLessPayment() {
+		assertThrows(InternalError.class, () -> {dummyPayment.getChange(new BigDecimal(50), new BigDecimal(10));  });
 	}
 	
 	// tests paying with tap

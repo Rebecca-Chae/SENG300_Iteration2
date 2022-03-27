@@ -85,7 +85,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	
 	// Return change after calculating it
 	public BigDecimal getChange(BigDecimal cost, BigDecimal paid) {
-		if (paid.intValue() > cost.intValue()) {
+		if (paid.intValue() < cost.intValue()) {
 			throw new InternalError("Bad call to function getChange: cost is greater than payment");
 		}
 		
@@ -237,6 +237,10 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	
 	public double getAmountDue() {
 		return amountDue;
+	}
+	
+	public String getMembership() {
+		return membershipNumber;
 	}
 	
 }

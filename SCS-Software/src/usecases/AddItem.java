@@ -42,9 +42,6 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 			throw new SimulationException("The bag is null.");
 		}
 		checkoutStation.baggingArea.add(bag);
-		
-		// TODO : Possibly need to delete comment below
-		//totalWeight = totalWeight - bagWeight;
 	}
 	
 	@Override
