@@ -426,8 +426,8 @@ public class SoftwareTest {
 	}
 	
 	@Test
-	public void testReceiveChange() {
-		
+	public void testReceiveChange_withLessPayment() {
+		assertThrows(InternalError.class, () -> {dummyPayment.getChange(new BigDecimal(50), new BigDecimal(10));  });
 	}
 	
 	// tests paying with tap
