@@ -97,18 +97,16 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	// checks fail to place item
 	@Override
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
-		while(weightInGrams != expectedWeight) {		
-			if(weightInGrams > expectedWeight) {
-				disableAllButScale();
-				System.out.println("Unexpected Item placed in bagging area, Please remove last item placed on scale.");
-			}
-			else if(weightInGrams < expectedWeight) {
-				disableAllButScale();
-				System.out.println("Please place item in bagging area.");
-			}
-			else {
-				totalWeight += expectedWeight;
-			}
+		if(weightInGrams > expectedWeight) {
+			disableAllButScale();
+			System.out.println("Unexpected Item placed in bagging area, Please remove last item placed on scale.");
+		}
+		else if(weightInGrams < expectedWeight) {
+			disableAllButScale();
+			System.out.println("Please place item in bagging area.");
+		}
+		else {
+			totalWeight += expectedWeight;
 		}
 	}
 	

@@ -109,9 +109,9 @@ public class SoftwareTest {
 	public void testGetTotalWeight() {
 		AddItem.resetTotalWeight();
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b1); // $1 100g
-		dummyAddItem.weightChanged(testStation.scanningArea, 100);					//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.weightChanged(testStation.baggingArea, 100);					//TODO : May need to change scanningArea to baggingArea
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b4); // $4 30g
-		dummyAddItem.weightChanged(testStation.scanningArea, 30);					//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.weightChanged(testStation.baggingArea, 30);					//TODO : May need to change scanningArea to baggingArea
 
 		assertEquals(130, AddItem.getTotalWeight(), 0);
 		
@@ -274,7 +274,7 @@ public class SoftwareTest {
 	public void testWouldLikeToCheckOutPass() {
 		dummyPayment.wouldLikeToCheckOut(AddItem.getTotalPrice());
 		
-		Assert.assertTrue(testStation.scanningArea.isDisabled());						//TODO : May need to change scanningArea to baggingArea
+		Assert.assertTrue(testStation.baggingArea.isDisabled());						//TODO : May need to change scanningArea to baggingArea
 		Assert.assertTrue(testStation.mainScanner.isDisabled());
 		Assert.assertFalse(testStation.coinValidator.isDisabled());
 		Assert.assertFalse(testStation.banknoteValidator.isDisabled());
