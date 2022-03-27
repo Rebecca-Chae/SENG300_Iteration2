@@ -239,4 +239,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		return amountDue;
 	}
 	
+	public String getMembership() {
+		return membershipNumber;
+	}
+	
 }
