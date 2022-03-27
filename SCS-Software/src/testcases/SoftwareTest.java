@@ -14,6 +14,7 @@ import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 
 import usecases.AddItem;
@@ -465,9 +466,17 @@ public class SoftwareTest {
 	public void testAddItemAfterPartialPayment() {
 		
 	}
+	
+	// Tests adding a null bag to the bagging area
+	@Test
+	public void testAddBagNull() {
+		;
+		assertThrows(SimulationException.class, () -> {dummyAddItem.addOwnBag(null);  });
+	}
+	
 	// Testcase for instantiating inventory class (used for coverage)
 	@Test
-	public void inventoryInstantion() {
+	public void testInventoryInstantion() {
 		Inventory inv = new Inventory();
 	}
 }
