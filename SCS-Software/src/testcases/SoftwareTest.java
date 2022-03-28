@@ -25,28 +25,6 @@ import usecases.AddItem;
 import usecases.Inventory;
 import usecases.Payment;
 
-// Stub class to cover cases that need the Item class
-class ItemToTest extends Item { //This covers Item class
-
-    private final double weight;
-
-    /**
-     * Constructs an item with the indicated weight.
-     *
-     * @param weightInGrams The weight of the item.
-     * @throws SimulationException If the weight is &le;0.
-     */
-    protected ItemToTest(double weightInGrams) {
-        super(weightInGrams);
-        this.weight = weightInGrams;
-    }
-
-    @Override
-    public double getWeight() {
-        return weight;
-    }
-}
-
 public class SoftwareTest {
 
 	private static Barcode b1;
