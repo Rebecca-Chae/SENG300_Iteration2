@@ -1,20 +1,14 @@
 package testcases;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException; 
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
-import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
@@ -100,9 +94,9 @@ public class InventoryTest {
 	}
 
 
+	// Testcase for instantiating inventory class (used for coverage)
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testInventoryInstantion() {
+		Inventory inv = new Inventory();
 	}
-
 }
