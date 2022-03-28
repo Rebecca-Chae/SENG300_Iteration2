@@ -210,7 +210,7 @@ public class PaymentTest {
 		Assert.assertTrue("00000" == dummyPayment.getMembership());
 	}
 	
-	
+	// tests for getChange
 	@Test (expected = InternalError.class)
 	public void testGetChange_withLessPayment() {
 		dummyPayment.getChange(new BigDecimal(50), new BigDecimal(10));
