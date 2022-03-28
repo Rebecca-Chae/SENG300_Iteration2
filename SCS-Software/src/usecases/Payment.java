@@ -91,13 +91,14 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 			throw new InternalError("Bad call to function getChange: cost is greater than payment");
 		}
 		
-		BigDecimal changeAmt = cost.subtract(paid);
+		BigDecimal changeAmt = paid.subtract(cost);
+		
 		List<BigDecimal> denoms = station.coinDenominations;
 		Collections.sort(denoms, Collections.reverseOrder()); // sort the list of denominations in descending order
 		
 		// greedy method to return coins equal to (or as close as possible to) changeAmt
 		for(BigDecimal denom : denoms) { // for each denomination, starting with the largest
-			while(changeAmt.subtract(denom).intValue() >= 0) { // if subtracting that denom from changeAmt is still positive, keep doing it
+			while(changeAmt.subtract(denom).doubleValue() >= 0) { // if subtracting that denom from changeAmt is still positive, keep doing it
 				try {
 					station.coinDispensers.get(denom).emit();
 				} catch (OverloadException | EmptyException | DisabledException e) {

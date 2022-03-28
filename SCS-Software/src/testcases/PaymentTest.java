@@ -218,7 +218,7 @@ public class PaymentTest {
 	
 	@Test
 	public void testGetChangeNormal() {
-		
+		Assert.assertEquals(new BigDecimal(0), dummyPayment.getChange(new BigDecimal(10), new BigDecimal(15)));
 	}
 	
 	
