@@ -14,7 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.BarcodedItem;
-import org.lsmr.selfcheckout.Item;
 import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
@@ -25,29 +24,7 @@ import usecases.AddItem;
 import usecases.Inventory;
 import usecases.Payment;
 
-// Stub class to cover cases that need the Item class
-class ItemToTest extends Item { //This covers Item class
-
-    private final double weight;
-
-    /**
-     * Constructs an item with the indicated weight.
-     *
-     * @param weightInGrams The weight of the item.
-     * @throws SimulationException If the weight is &le;0.
-     */
-    protected ItemToTest(double weightInGrams) {
-        super(weightInGrams);
-        this.weight = weightInGrams;
-    }
-
-    @Override
-    public double getWeight() {
-        return weight;
-    }
-}
-
-public class SoftwareTest {
+public class AddItemTest {
 
 	private static Barcode b1;
 	private static Barcode b2;
@@ -280,13 +257,6 @@ public class SoftwareTest {
 	
 
 	@Test
-	public void testPaymentConstructorPass() {
-		// Arrange, Act, Assert
-		Assert.assertTrue(testStation.coinValidator.isDisabled());
-		Assert.assertTrue(testStation.banknoteValidator.isDisabled());
-	}
-
-	@Test
 	public void testWouldLikeToCheckOutAmountDuePass() {
 		AddItem.resetScannedItemsCatalog();
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b1);
@@ -296,67 +266,7 @@ public class SoftwareTest {
 		dummyPayment.wouldLikeToCheckOut(AddItem.getTotalPrice());
 		Assert.assertEquals(dummyPayment.getAmountDue(), AddItem.getTotalPrice(), 0);
 	}
-
 	
-	@Test
-	public void testWouldLikeToCheckOutPass() {
-		dummyPayment.wouldLikeToCheckOut(AddItem.getTotalPrice());
-		
-		Assert.assertTrue(testStation.baggingArea.isDisabled());						//TODO : May need to change scanningArea to baggingArea
-		Assert.assertTrue(testStation.mainScanner.isDisabled());
-		Assert.assertFalse(testStation.coinValidator.isDisabled());
-		Assert.assertFalse(testStation.banknoteValidator.isDisabled());
-	}
-	
-	@Test
-	public void testValidCoinDetectedValGTamountDue() 
-	{
-		dummyPayment.wouldLikeToCheckOut(0.10);
-		dummyPayment.validCoinDetected(testStation.coinValidator, new BigDecimal(0.25));
-		testCheckoutFinished();
-	}
-	
-	@Test
-	public void testValidCoinDetectedvalLTamountDue() 
-	{
-		dummyPayment.wouldLikeToCheckOut(100.00);
-		dummyPayment.validCoinDetected(testStation.coinValidator, new BigDecimal(0.25));
-		Assert.assertTrue(0.25 == dummyPayment.getAmountPaid());
-	}
-
-	@Test
-	public void testValidBanknoteDetectedValGTamountDue() 
-	{
-		dummyPayment.wouldLikeToCheckOut(10.00);
-		dummyPayment.validBanknoteDetected(testStation.banknoteValidator, testCurrency, 50);
-		testCheckoutFinished();
-		
-	}
-	
-	@Test
-	public void testValidBanknoteDetectedValLTamountDue() 
-	{
-		dummyPayment.wouldLikeToCheckOut(100.00);
-		dummyPayment.validBanknoteDetected(testStation.banknoteValidator, testCurrency, 5);
-		Assert.assertTrue(5 == dummyPayment.getAmountPaid());
-	}
-	
-	@Test
-	public void testCheckoutFinished() 
-	{
-		AddItem.resetScannedItemsCatalog();
-		dummyAddItem.barcodeScanned(testStation.mainScanner, b1);
-		dummyAddItem.barcodeScanned(testStation.mainScanner, b3);
-		dummyPayment.checkoutFinished();
-		assertEquals(0, AddItem.getTotalPrice(), 0);
-		assertEquals(0, dummyPayment.getAmountPaid(), 0);
-		assertEquals(0, AddItem.getTotalWeight(), 0);
-		assertTrue(AddItem.getScannedItemsCatalog().isEmpty());
-		assertFalse(testStation.scanningArea.isDisabled());				//TODO : May need to change scanningArea to baggingArea
-		assertFalse(testStation.mainScanner.isDisabled());
-		assertTrue(testStation.coinValidator.isDisabled());
-		assertTrue(testStation.banknoteValidator.isDisabled());
-	}
 	
 	@Test
 	public void testGetScannedItemsCatalog() {
@@ -383,33 +293,6 @@ public class SoftwareTest {
 		
 	}
 	
-	@Test
-	public void testGetamountPaid() 
-	{
-		dummyPayment.wouldLikeToCheckOut(100.00);
-		dummyPayment.validBanknoteDetected(testStation.banknoteValidator, testCurrency, 5);
-		assertTrue(5 == dummyPayment.getAmountPaid());
-	}
-	
-	@Test
-	public void testGetamountDue() 
-	{
-		dummyPayment.wouldLikeToCheckOut(100.00);
-		assertTrue(100.00 == dummyPayment.getAmountDue());
-	}
-	
-	@Test
-	public void testreturnToScanning() 
-	{
-		//arrange
-		// act
-		dummyPayment.returnToScanning();
-		//assert
-		Assert.assertFalse(testStation.scanningArea.isDisabled());					//TODO : May need to change scanningArea to baggingArea
-		Assert.assertFalse(testStation.mainScanner.isDisabled());
-		Assert.assertTrue(testStation.coinValidator.isDisabled());
-		Assert.assertTrue(testStation.banknoteValidator.isDisabled());
-	}
 	
 	@Test
 	public void testResetScannedItemsCatalog() {
@@ -441,60 +324,6 @@ public class SoftwareTest {
 		
 	}
 	
-	@Test
-	public void testScanMembershipCard() throws IOException {
-		card = new Card("MEMBERSHIP", "00000", "Holder", "000", "0000", true, true);
-		dummyPayment.checkMembership(card);
-		Assert.assertTrue("00000" == dummyPayment.getMembership());
-	}
-	
-	@Test
-	public void testReceiveChange_withLessPayment() {
-		assertThrows(InternalError.class, () -> {dummyPayment.getChange(new BigDecimal(50), new BigDecimal(10));  });
-	}
-	
-	// tests paying with tap
-	@Test
-	public void testTapCredit() {
-		
-	}
-	
-	@Test
-	public void testTapDebit() {
-		
-	}
-	
-	// tests paying with swipe
-	@Test
-	public void testSwipeCredit() {
-		
-	}
-	
-	@Test
-	public void testSwipeDebit() {
-		
-	}
-	
-	// tests paying with insert
-	@Test
-	public void testInsertCredit() {
-		
-	}
-	
-	@Test
-	public void testInsertDebit() {
-		
-	}
-	
-	@Test
-	public void testFailToPlaceItem() {
-		
-	}
-	
-	@Test
-	public void testAddItemAfterPartialPayment() {
-		
-	}
 	
 	// Tests adding a null bag to the bagging area
 	@Test
@@ -511,11 +340,5 @@ public class SoftwareTest {
 		dummyAddItem.addOwnBag(dummyBag);
 		dummyAddItem.weightChanged(testStation.baggingArea, 10);
 
-	}
-	
-	// Testcase for instantiating inventory class (used for coverage)
-	@Test
-	public void testInventoryInstantion() {
-		Inventory inv = new Inventory();
 	}
 }
