@@ -216,6 +216,11 @@ public class PaymentTest {
 		dummyPayment.getChange(new BigDecimal(50), new BigDecimal(10));
 	}
 	
+	@Test
+	public void testGetChangeNormal() {
+		
+	}
+	
 	
 	// tests paying with tap
 	@Test

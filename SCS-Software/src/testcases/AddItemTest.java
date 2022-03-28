@@ -326,9 +326,9 @@ public class AddItemTest {
 	
 	
 	// Tests adding a null bag to the bagging area
-	@Test
+	@Test (expected = SimulationException.class)
 	public void testAddBagNull() {
-		assertThrows(SimulationException.class, () -> {dummyAddItem.addOwnBag(null);  });
+		dummyAddItem.addOwnBag(null);
 	}
 	
 	// test to check adding a valid bag with own weight
