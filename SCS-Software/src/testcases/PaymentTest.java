@@ -211,9 +211,9 @@ public class PaymentTest {
 	}
 	
 	
-	@Test
-	public void testReceiveChange_withLessPayment() {
-		assertThrows(InternalError.class, () -> {dummyPayment.getChange(new BigDecimal(50), new BigDecimal(10));  });
+	@Test (expected = InternalError.class)
+	public void testGetChange_withLessPayment() {
+		dummyPayment.getChange(new BigDecimal(50), new BigDecimal(10));
 	}
 	
 	

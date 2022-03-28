@@ -83,6 +83,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	@Override
 	public void invalidBanknoteDetected(BanknoteValidator validator) {}
 	
+	
+	
 	// Return change after calculating it
 	public BigDecimal getChange(BigDecimal cost, BigDecimal paid) {
 		if (paid.intValue() < cost.intValue()) {
@@ -107,6 +109,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		}	
 		return changeAmt; // changeAmt still may not be zero, if the denominations do not allow for the exact change to be returned.
 	}
+	
 	
 	public void checkMembership (Card card) throws IOException {
 		CardData cardData = station.cardReader.swipe(card);
