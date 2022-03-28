@@ -220,39 +220,46 @@ public class PaymentTest {
 	public void testGetChangeNormal() {
 		
 	}
-	
-	
+		
 	// tests paying with tap
 	@Test
 	public void testTapCredit() {
-		
+		card = new Card("CREDIT", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.cardWithTap(card, 10.00);
 	}
-	
+		
 	@Test
 	public void testTapDebit() {
-		
+		card = new Card("DEBIT", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.cardWithTap(card, 10.00);
 	}
-	
+		
+	/*
 	// tests paying with swipe
 	@Test
 	public void testSwipeCredit() {
-		
+		card = new Card("CREDIT", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.cardWithSwipe(card, 10.00);
 	}
-	
+		
 	@Test
 	public void testSwipeDebit() {
-		
+		card = new Card("DEBIT", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.cardWithSwipe(card, 10.00);
 	}
-	
+	*/
+		
 	// tests paying with insert
 	@Test
 	public void testInsertCredit() {
-		
+		card = new Card("CREDIT", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.cardWithInsert(card, "0000", 10.00);
 	}
-	
+		
 	@Test
 	public void testInsertDebit() {
-		
+		card = new Card("DEBIT", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.cardWithInsert(card, "0000", 10.00);
 	}
 	
 	@Test

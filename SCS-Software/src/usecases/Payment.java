@@ -148,6 +148,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 				cardholder = cardData.getCardholder();
 				cardNumber = cardData.getNumber();
 				cvv = cardData.getCVV();
+				
+				station.cardReader.remove();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
