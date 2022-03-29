@@ -114,7 +114,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	
 	public void checkMembership (Card card) throws IOException {
 		CardData cardData = station.cardReader.swipe(card);
-		if (cardData.getType() == "MEMBERSHIP") {
+		if (cardData.getType() == "MEMBERSHIP" && cardData.getNumber().contains("[0-9]+")) {
 			hasMembership = true;
 			membershipNumber = cardData.getNumber();
 			member = "Membership #";
