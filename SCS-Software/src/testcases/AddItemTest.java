@@ -198,63 +198,6 @@ public class AddItemTest {
 		assertEquals(1.00, AddItem.getTotalPrice(), 0);
 	}
 	
-	@Test
-	public void testAddProductAndItemByBarcode() {
-		
-		/// TestItem, Barcode: 7777, Weight: 10.00g, Price: $1.00
-		double testWeight = 10;
-		Numeral[] n = {Numeral.seven, Numeral.seven, Numeral.seven, Numeral.seven};
-		Barcode b = new Barcode(n);
-		BarcodedItem testItem = new BarcodedItem(b, 10.00);
-		BarcodedProduct testProduct = new BarcodedProduct(b, "Test", new BigDecimal(1.00), testWeight);
-		
-		ArrayList<Object> pi = new ArrayList<>();
-		pi.add(testProduct);
-		pi.add(testItem);
-		Inventory.addProductAndItemByBarcode(b, pi);
-		
-		ArrayList<Object> test = Inventory.getProductAndItemFromBarcode(b);
-		assertTrue(test.get(0) == testProduct);
-		
-	}
-	
-	@Test
-	public void testRemoveProductAndItemByBarcode() {
-		
-		/// TestItem, Barcode: 7777, Weight: 10.00g, Price: $1.00
-		double testWeight = 10;
-		Numeral[] n = {Numeral.seven, Numeral.seven, Numeral.seven, Numeral.seven};
-		Barcode b = new Barcode(n);
-		BarcodedItem testItem = new BarcodedItem(b, 10.00);
-		BarcodedProduct testProduct = new BarcodedProduct(b, "Test", new BigDecimal(1.00), testWeight);
-		
-		ArrayList<Object> pi = new ArrayList<>();
-		pi.add(testProduct);
-		pi.add(testItem);
-		Inventory.addProductAndItemByBarcode(b, pi);
-		Inventory.removeProductAndItemByBarcode(b);
-		
-		assertTrue(null == Inventory.getProductAndItemFromBarcode(b));
-	}
-	
-	@Test
-	public void testGetProductAndItemFromBarcode() {
-		double testWeight = 10;
-		Numeral[] n = {Numeral.seven, Numeral.seven, Numeral.seven, Numeral.seven};
-		Barcode b = new Barcode(n);
-		BarcodedItem testItem = new BarcodedItem(b, 10.00);
-		BarcodedProduct testProduct = new BarcodedProduct(b, "Test", new BigDecimal(1.00), testWeight);
-		
-		ArrayList<Object> piTest = new ArrayList<>();
-		piTest.add(testProduct);
-		piTest.add(testItem);
-		Inventory.addProductAndItemByBarcode(b, piTest);
-		
-		ArrayList<Object> pi = Inventory.getProductAndItemFromBarcode(b);
-		assertTrue(testProduct == pi.get(0));
-		assertTrue(testItem == pi.get(1));
-	}
-	
 
 	@Test
 	public void testWouldLikeToCheckOutAmountDuePass() {
