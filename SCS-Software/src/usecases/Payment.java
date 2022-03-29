@@ -14,6 +14,9 @@ import org.lsmr.selfcheckout.Card.CardTapData;
 import org.lsmr.selfcheckout.devices.*;
 import org.lsmr.selfcheckout.devices.observers.*;
 
+/**
+ * Represents the use cases involved with payment.
+ */
 public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver {
 	private SelfCheckoutStation station;
 	private double amountDue;
@@ -26,6 +29,12 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	private String cardholder;
 	private String cvv;
 	
+	/**
+	 * Create a Payment instance.
+	 * 
+	 * @param checkout
+	 *            The self checkout station to be used.
+	 */
 	public Payment(SelfCheckoutStation checkout) {
 		station = checkout;
 		station.coinValidator.attach(this);
@@ -39,7 +48,12 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		station.printer.addPaper(500);
 		station.printer.addInk(500);
 	}
-
+	
+	/**
+	 * Simulates the action of wanting to check out.
+	 * @param  totalPrice
+	 * 			The total price before checkout.
+	 */
 	public void wouldLikeToCheckOut(double totalPrice) {
 		amountDue = totalPrice;
 		amountPaid = 0;
@@ -60,8 +74,16 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	public void disabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
 	}
 
+	/**
+	 * Checks that the indicated coin has been detected and determined
+	 * to be valid.
+	 * 
+	 * @param validator
+	 *            The device to validate the coin.
+	 * @param value
+	 *            The value of the coin.
+	 */
 	@Override
-	// Called whenever a new coin is inserted and accepted in the machine
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
 		amountPaid += value.doubleValue();
 		if(amountPaid >= amountDue) {
@@ -69,9 +91,27 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		}
 	}
 
+	/**
+	 * Checks that a coin has been detected and determined to be
+	 * invalid.
+	 * 
+	 * @param validator
+	 *            The device to invalidate the coin.
+	 */
 	@Override
 	public void invalidCoinDetected(CoinValidator validator) {}
 
+	/**
+	 * Checks that the indicated banknote has been detected and
+	 * determined to be valid.
+	 * 
+	 * @param validator
+	 *            The device to validate the banknote.
+	 * @param currency
+	 *            The kind of currency of the inserted banknote.
+	 * @param value
+	 *            The value of the inserted banknote.
+	 */
 	@Override
 	public void validBanknoteDetected(BanknoteValidator validator, Currency currency, int value) {
 		amountPaid += (double) value;
@@ -80,11 +120,24 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		}
 	}
 	
+	/**
+	 * Checks that the indicated banknote has been detected and
+	 * determined to be invalid.
+	 * 
+	 * @param validator
+	 *            The device to invalidate the banknote.
+	 */
 	@Override
 	public void invalidBanknoteDetected(BanknoteValidator validator) {}
 	
 	
-	
+	/**
+	 * Simulates the action returning change.
+	 * @param  cost
+	 * 			The cost of the purchase.
+	 * @param  paid 
+	 * 			The amount paid.
+	 */
 	// Return change after calculating it
 	public BigDecimal getChange(BigDecimal cost, BigDecimal paid) {
 		if (paid.intValue() < cost.intValue()) {
@@ -112,6 +165,13 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	}
 	
 	
+	/**
+	 * Checks if the card is a membership card.
+	 * @param  card
+	 * 			The card to be checked.
+	 * @throws IOException
+	 *             If anything went wrong with the data transfer.
+	 */
 	public void checkMembership (Card card) throws IOException {
 		CardData cardData = station.cardReader.swipe(card);
 		if (cardData.getType() == "MEMBERSHIP" && cardData.getNumber().contains("[0-9]+")) {
@@ -121,6 +181,14 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		}
 	}
 	
+	/**
+	 * Simulates the action of swiping the card. Checks for credit and debit cards.
+	 * @param  card
+	 * 			The card to be swiped.
+	 * 
+	 * @throws IOException
+	 *             If anything went wrong with the data transfer.
+	 */
 	public void cardWithSwipe(Card card, double amount) throws IOException {
 		CardData cardData;
 		cardData = station.cardReader.swipe(card);
@@ -141,6 +209,14 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		station.cardReader.remove();
 	}
 
+	/**
+	 * Simulates the action of tapping the card. Checks for credit and debit cards.
+	 * @param  card
+	 * 			The card to be tapped.
+	 * 
+	 * @throws IOException
+	 *             If anything went wrong with the data transfer.
+	 */
 	public void cardWithTap(Card card, double amount) throws IOException {
 		CardData cardData;
 		cardData = station.cardReader.tap(card);
@@ -161,6 +237,14 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		station.cardReader.remove();
 	}
 	
+	/**
+	 * Simulates the action of inserting the card. Checks for credit and debit cards.
+	 * @param  card
+	 * 			The card to be inserted.
+	 * 
+	 * @throws IOException
+	 *             If anything went wrong with the data transfer.
+	 */
 	public void cardWithInsert(Card card,  String pin, double amount) throws IOException {
 		if (pin == null) {
 			throw new SimulationException("The card has no chip."); 
@@ -185,6 +269,16 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		station.cardReader.remove();
 	}
 	
+	/**
+	 * Checking the validation of a card.
+	 * @param  holder
+	 * 			The card holder to be checked.
+	 * @param  number
+	 * 			The card number to be checked.
+	 * @param  value
+	 * 			The card's verification value to be checked.
+	 * @return The validation of the card.
+	 */
 	private boolean checkValidation(String holder, String number, String value) {
 		// Check the card holder
 		if (holder == null || holder == "") {
@@ -201,6 +295,9 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		return true;
 	}
 	
+	/**
+	 * Simulates the action of returning to scanning.
+	 */
 	public void returnToScanning() {
 		//any amount inserted would be returned or stored. but this is not implemented yet as not required in this iteration.
 		isCheckingOut = false;
@@ -210,6 +307,9 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		station.banknoteValidator.disable();		
 	}
 	
+	/**
+	 * Simulates the action of finishing the checkout.
+	 */
 	public void checkoutFinished() {
 		if (hasMembership == true) {
 			char [] memberProof = member.toCharArray();
@@ -238,14 +338,29 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		isCheckingOut = false;
 	}
 	
+	/**
+	 * Gets the amount paid.
+	 * 
+	 * @return The amount paid.
+	 */
 	public double getAmountPaid() {
 		return amountPaid;
 	}
 	
+	/**
+	 * Gets the amount due.
+	 * 
+	 * @return The amount due.
+	 */
 	public double getAmountDue() {
 		return amountDue;
 	}
 	
+	/**
+	 * Gets the membership number.
+	 * 
+	 * @return The membership number.
+	 */
 	public String getMembership() {
 		return membershipNumber;
 	}

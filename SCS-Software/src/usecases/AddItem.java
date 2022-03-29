@@ -1,6 +1,7 @@
 package usecases;
 
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
@@ -10,6 +11,9 @@ import org.lsmr.selfcheckout.devices.*;
 import org.lsmr.selfcheckout.devices.observers.*;
 import org.lsmr.selfcheckout.products.*;
 
+/**
+ * Represents the use cases involved with adding or removing an item.
+ */
 public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver {
 	
 	private SelfCheckoutStation checkoutStation;
@@ -19,6 +23,12 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	private double expectedWeight;
 	private static ArrayList<Barcode> scannedItems;
 	
+	/**
+	 * Create an AddItem instance.
+	 * 
+	 * @param scs
+	 *            The self checkout station to be used.
+	 */
 	public AddItem(SelfCheckoutStation scs){
 		checkoutStation = scs;
 		checkoutStation.mainScanner.attach(this);					//TODO : Need to change scanner to mainScanner and / or handheldScanner
@@ -28,14 +38,29 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		scannedItems = new ArrayList<>();
 	}
 	
+	/**
+	 * Gets the total weight.
+	 * 
+	 * @return The total weight on the scale.
+	 */
 	public static double getTotalWeight() {
 		return totalWeight;
 	}
 	
+	/**
+	 * Gets the total price.
+	 * 
+	 * @return The total price.
+	 */
 	public static double getTotalPrice() {
 		return totalPrice;
 	}
-
+	
+	/**
+	 * Simulates the action of adding a bag.
+	 * @param  bag
+	 * 			The bag to be added.
+	 */
 	public void addOwnBag(Item bag) {
 		// Customer adds their own bag to the bagging area
 		if (bag == null) {
@@ -48,10 +73,18 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	public void enabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
 	}
 
+	
 	@Override
 	public void disabled(AbstractDevice<? extends AbstractDeviceObserver> device) {
 	}
 
+	/**
+	 * Simulates the action of scanning a barcode.
+	 * @param  barcodeScanner
+	 * 			The scanner to scan the barcode.
+	 * @param  barcode 
+	 * 			The barcode to be scanned.
+	 */
 	@Override
 	public void barcodeScanned(BarcodeScanner barcodeScanner, Barcode barcode) {
 		ArrayList<Object> pi = Inventory.getProductAndItemFromBarcode(barcode);
@@ -72,6 +105,11 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		
 	}
 	
+	/**
+	 * Simulates the action of removing a scanned item.
+	 * @param  aBarcode 
+	 * 			The barcode of the scanned item.
+	 */
 	public void removeScannedItem(Barcode aBarcode) {
 		if(scannedItems.contains(aBarcode) == false) {
 			System.out.println("This item was never scanned, it cannot be removed.");
@@ -92,7 +130,14 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		scannedItems.remove(aBarcode);
 	}
 	
-	// checks fail to place item
+	/**
+	 * Checks if the weight on the indicated scale has changed. Also checks if the customer fails to place an item.
+	 * 
+	 * @param scale
+	 *            The scale to be checked.
+	 * @param weightInGrams
+	 *            The new weight in grams.
+	 */
 	@Override
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
 		if(weightInGrams > expectedWeight) {
@@ -108,7 +153,13 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		}
 	}
 	
-	// Customer adds additional items after partial payment
+	/**
+	 * Simulates the action of adding additional items after partial payment.
+	 * @param  barcodeScanner
+	 * 			The scanner to scan the barcode.
+	 * @param  barcode 
+	 * 			The barcode to be scanned.
+	 */
 	public void afterPartialPayment(BarcodeScanner barcodeScanner, Barcode barcode) {		
 		double tempTotal = totalPrice;
 		barcodeScanned(barcodeScanner, barcode);
@@ -116,17 +167,33 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		totalPrice = totalPrice - tempTotal;
 	}
 
+	/**
+	 * Announces that excessive weight has been placed on the indicated scale.
+	 * 
+	 * @param scale
+	 *            The scale where the event occurred.
+	 */
 	@Override
 	public void overload(ElectronicScale scale) {
 		disableAllButScale();
 		System.out.println("Too many Items on scale, please reduce weight by removing heavy items from the bagging area.");
 	}
 
+	/**
+	 * Announces that the former excessive weight has been removed from the
+	 * indicated scale, and it is again able to measure weight.
+	 * 
+	 * @param scale
+	 *            The scale where the event occurred.
+	 */
 	@Override
 	public void outOfOverload(ElectronicScale scale) {
 		checkoutStation.mainScanner.enable();						//TODO : Need to change scanner to mainScanner and / or handheldScanner
 	}
 	
+	/**
+	 * Simulates the action of disabling all devices but the scale.
+	 */
 	public void disableAllButScale(){
 		checkoutStation.scanningArea.enable();								//TODO : Need to change scale to baggingArea and / or scanningArea
 		checkoutStation.mainScanner.disable();							//TODO : Need to change scanner to mainScanner and / or handheldScanner
@@ -136,26 +203,48 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 		checkoutStation.coinValidator.disable();
 	}
 	
+	/**
+	 * Gets the catalog of scanned items.
+	 * 
+	 * @return The catalog of scanned items.
+	 */
 	public static String getScannedItemsCatalog() {
 		return scannedItemsCatalog.toString();
 	}
 	
+	/**
+	 * Simulates the action of reseting the scanned items catalog.
+	 */
 	public static void resetScannedItemsCatalog() {
 		scannedItemsCatalog.setLength(0);
 	}
 	
+	/**
+	 * Simulates the action of resetting the total price.
+	 */
 	public static void resetTotal() {
 		totalPrice = 0;
 	}
 	
+	/**
+	 * Gets the list of scanned items.
+	 * 
+	 * @return The list of scanned items.
+	 */
 	public static ArrayList<Barcode> getScannedItems() {
 		return scannedItems;
 	}
 	
+	/**
+	 * Simulates the action of resetting the scanned items.
+	 */
 	public static void resetScannedItems() {
 		scannedItems.clear();
 	}
 	
+	/**
+	 * Simulates the action of resetting the total weight.
+	 */
 	public static void resetTotalWeight() {
 		totalWeight = 0;
 	}
