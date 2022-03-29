@@ -261,15 +261,4 @@ public class PaymentTest {
 		card = new Card("DEBIT", "00000", "Holder", "000", "0000", true, true);
 		dummyPayment.cardWithInsert(card, "0000", 10.00);
 	}
-	
-	@Test
-	public void testFailToPlaceItem() {
-		
-	}
-	
-	@Test
-	public void testAddItemAfterPartialPayment() {
-		
-	}
-
 }
