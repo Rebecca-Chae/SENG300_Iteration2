@@ -17,6 +17,7 @@ import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.Card;
 import org.lsmr.selfcheckout.Numeral;
 import org.lsmr.selfcheckout.devices.SelfCheckoutStation;
+import org.lsmr.selfcheckout.devices.SimulationException;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 
 import usecases.AddItem;
@@ -225,40 +226,101 @@ public class PaymentTest {
 	@Test
 	public void testTapCredit() {
 		card = new Card("CREDIT", "00000", "Holder", "000", "0000", true, true);
-		dummyPayment.cardWithTap(card, 10.00);
+		try {
+			dummyPayment.cardWithTap(card, 10.00);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-		
+			
 	@Test
 	public void testTapDebit() {
 		card = new Card("DEBIT", "00000", "Holder", "000", "0000", true, true);
+		try {
+			dummyPayment.cardWithTap(card, 10.00);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+		
+		
+	@Test (expected = IOException.class)
+	public void testTapWrongCard() throws IOException {
+		card = new Card("CARD", "00000", "Holder", "000", "0000", true, true);
 		dummyPayment.cardWithTap(card, 10.00);
 	}
 		
-	/*
 	// tests paying with swipe
 	@Test
 	public void testSwipeCredit() {
 		card = new Card("CREDIT", "00000", "Holder", "000", "0000", true, true);
-		dummyPayment.cardWithSwipe(card, 10.00);
+		try {
+			dummyPayment.cardWithSwipe(card, 10.00);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-		
+			
 	@Test
 	public void testSwipeDebit() {
 		card = new Card("DEBIT", "00000", "Holder", "000", "0000", true, true);
-		dummyPayment.cardWithSwipe(card, 10.00);
+		try {
+			dummyPayment.cardWithSwipe(card, 10.00);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	*/
+		
+	@Test (expected = IOException.class)
+	public void testSwipeWrongCard() throws IOException {
+		card = new Card("CARD", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.cardWithSwipe(card, 10.00);
+		
+	}
 		
 	// tests paying with insert
 	@Test
 	public void testInsertCredit() {
 		card = new Card("CREDIT", "00000", "Holder", "000", "0000", true, true);
-		dummyPayment.cardWithInsert(card, "0000", 10.00);
+		try {
+			dummyPayment.cardWithInsert(card, "0000", 10.00);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-		
+			
 	@Test
 	public void testInsertDebit() {
 		card = new Card("DEBIT", "00000", "Holder", "000", "0000", true, true);
+		try {
+			dummyPayment.cardWithInsert(card, "0000", 10.00);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+		
+	@Test (expected = SimulationException.class)
+	public void testInsertNullPin() {
+		card = new Card("CARD", "00000", "Holder", "000", "0000", true, true);
+		try {
+			dummyPayment.cardWithInsert(card, null, 10.00);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+		
+		
+	@Test (expected = IOException.class)
+	public void testInsertWrongCard() throws IOException {
+		card = new Card("CARD", "00000", "Holder", "000", "0000", true, true);
 		dummyPayment.cardWithInsert(card, "0000", 10.00);
 	}
+	
 }

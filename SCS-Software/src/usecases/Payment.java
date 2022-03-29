@@ -121,67 +121,68 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		}
 	}
 	
-	public void cardWithSwipe(Card card, double amount) {
+	public void cardWithSwipe(Card card, double amount) throws IOException {
 		CardData cardData;
-		try {
-			cardData = station.cardReader.swipe(card);
+		cardData = station.cardReader.swipe(card);
 			
-			if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
-				cardholder = cardData.getCardholder();
-				cardNumber = cardData.getNumber();
-				cvv = cardData.getCVV();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
+			cardholder = cardData.getCardholder();
+			cardNumber = cardData.getNumber();
+//			cvv = cardData.getCVV();
+		}
+		else {
+			throw new IOException();
 		}
 		
 		if (checkValidation(cardholder, cardNumber, cvv)) {
 			amountPaid += amount;			
 		}
+		
+		station.cardReader.remove();
 	}
 
-	public void cardWithTap(Card card, double amount) {
+	public void cardWithTap(Card card, double amount) throws IOException {
 		CardData cardData;
-		try {
-			cardData = station.cardReader.tap(card);
+		cardData = station.cardReader.tap(card);
 			
-			if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
-				cardholder = cardData.getCardholder();
-				cardNumber = cardData.getNumber();
-				cvv = cardData.getCVV();
-				
-				station.cardReader.remove();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
+			cardholder = cardData.getCardholder();
+			cardNumber = cardData.getNumber();
+			cvv = cardData.getCVV();
+		}
+		else {
+			throw new IOException();
 		}
 		
 		if (checkValidation(cardholder, cardNumber, cvv)) {
 			amountPaid += amount;			
 		}
+		
+		station.cardReader.remove();
 	}
 	
-	public void cardWithInsert(Card card,  String pin, double amount) {
+	public void cardWithInsert(Card card,  String pin, double amount) throws IOException {
 		if (pin == null) {
 			throw new SimulationException("The card has no chip."); 
 		}
 		
 		CardData cardData;
-		try {
-			cardData = station.cardReader.insert(card, pin);
+		cardData = station.cardReader.insert(card, pin);
 			
-			if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
-				cardholder = cardData.getCardholder();
-				cardNumber = cardData.getNumber();
-				cvv = cardData.getCVV();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (cardData.getType() == "DEBIT" || cardData.getType() == "CREDIT") {
+			cardholder = cardData.getCardholder();
+			cardNumber = cardData.getNumber();
+			cvv = cardData.getCVV();
+		}
+		else {
+			throw new IOException();
 		}
 		
 		if (checkValidation(cardholder, cardNumber, cvv)) {
 			amountPaid += amount;			
 		}
+		
+		station.cardReader.remove();
 	}
 	
 	private boolean checkValidation(String holder, String number, String value) {
