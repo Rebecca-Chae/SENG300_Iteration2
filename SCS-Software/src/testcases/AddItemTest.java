@@ -267,6 +267,15 @@ public class AddItemTest {
 		
 	}
 	
+	@Test
+	public void testAfterPartialPayment() {
+		AddItem.resetScannedItems();
+		dummyAddItem.barcodeScanned(testStation.mainScanner, b2);
+		dummyAddItem.barcodeScanned(testStation.mainScanner, b3);
+		// Above two products are paid, the total price should be the prices of following products
+		dummyAddItem.afterPartialPayment(testStation.mainScanner, b1);
+		Assert.assertTrue(AddItem.getTotalPrice() == 1.0);
+	}
 	
 	// Tests adding a null bag to the bagging area
 	@Test (expected = SimulationException.class)
