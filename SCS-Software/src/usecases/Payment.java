@@ -279,7 +279,7 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	 * 			The card's verification value to be checked.
 	 * @return The validation of the card.
 	 */
-	private boolean checkValidation(String holder, String number, String value) {
+	public boolean checkValidation(String holder, String number, String value) {
 		// Check the card holder
 		if (holder == null || holder == "") {
 			return false;

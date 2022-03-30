@@ -323,4 +323,18 @@ public class PaymentTest {
 		dummyPayment.cardWithInsert(card, "0000", 10.00);
 	}
 	
+	@Test
+	public void testHolderValidation() {
+		Assert.assertFalse(dummyPayment.checkValidation(null, "00000", "000"));
+	}
+	
+	@Test
+	public void testCardNumberValidation() {
+		Assert.assertFalse(dummyPayment.checkValidation("Holder", null, "000"));
+	}
+	
+	@Test
+	public void testCVVValidation() {
+		Assert.assertFalse(dummyPayment.checkValidation("Holder", "00000", "0"));
+	}
 }
