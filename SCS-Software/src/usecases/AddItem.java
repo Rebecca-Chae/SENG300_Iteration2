@@ -149,7 +149,7 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 			disableAllButScale();
 			System.out.println("Unexpected Item placed in bagging area, Please remove last item placed on scale.");
 		}
-		else if(weightInGrams < expectedWeight && t.secondsPassed >= 5) {
+		else if(weightInGrams < expectedWeight || t.secondsPassed >= 5) {
 			disableAllButScale();
 			System.out.println("Please place item in bagging area.");
 		}
