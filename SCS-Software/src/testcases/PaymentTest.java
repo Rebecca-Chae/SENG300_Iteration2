@@ -154,6 +154,13 @@ public class PaymentTest {
 		Assert.assertTrue(5 == dummyPayment.getAmountPaid());
 	}
 	
+	@Test
+	public void testCheckoutFinishedWithMembership() throws IOException {
+		AddItem.resetScannedItemsCatalog();
+		card = new Card("MEMBERSHIP", "00000", "Holder", "000", "0000", true, true);
+		dummyPayment.checkMembership(card);
+		dummyPayment.checkoutFinished();
+	}
 	
 	@Test
 	public void testCheckoutFinished() 
