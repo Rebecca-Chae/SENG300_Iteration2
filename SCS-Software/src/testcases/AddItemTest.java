@@ -114,9 +114,9 @@ public class AddItemTest {
 	public void testGetTotalWeight() {
 		AddItem.resetTotalWeight();
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b1); // $1 100g
-		dummyAddItem.weightChanged(testStation.baggingArea, 100);					//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.weightChanged(testStation.baggingArea, 100);
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b4); // $4 30g
-		dummyAddItem.weightChanged(testStation.baggingArea, 30);					//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.weightChanged(testStation.baggingArea, 30);
 
 		assertEquals(130, AddItem.getTotalWeight(), 0);
 		
@@ -148,33 +148,33 @@ public class AddItemTest {
 	@Test
 	public void testWeightChanged_expectedLessThanActualChange() {
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b1);
-		dummyAddItem.weightChanged(testStation.scanningArea,  150.00);		//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.weightChanged(testStation.scanningArea,  150.00);
 		testDisableAllButScale();
 	}
 	
 	@Test
 	public void testWeightChanged_expectedMoreThanActualChange() {
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b1);
-		dummyAddItem.weightChanged(testStation.scanningArea,  50.00);		//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.weightChanged(testStation.scanningArea,  50.00);
 		testDisableAllButScale();
 	}
 	
 	@Test
 	public void testWeightChanged_expectedEqualsActualChange() {
 		dummyAddItem.barcodeScanned(testStation.mainScanner, b1);
-		dummyAddItem.weightChanged(testStation.scanningArea,  100.00);		//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.weightChanged(testStation.scanningArea,  100.00);
 		assertEquals(100.00, AddItem.getTotalWeight(), 0.001);
 	}
 	
 	@Test
 	public void testOverload() {
-		dummyAddItem.overload(testStation.scanningArea);					//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.overload(testStation.scanningArea);
 		testDisableAllButScale();
 	}
 
 	@Test
 	public void testOutOfOverload() {
-		dummyAddItem.outOfOverload(testStation.scanningArea);				//TODO : May need to change scanningArea to baggingArea
+		dummyAddItem.outOfOverload(testStation.scanningArea);
 		assertFalse(testStation.mainScanner.isDisabled());
 	}
 	
@@ -186,7 +186,7 @@ public class AddItemTest {
 		assertTrue(testStation.coinSlot.isDisabled());
 		assertTrue(testStation.banknoteValidator.isDisabled());
 		assertTrue(testStation.coinValidator.isDisabled());
-		assertFalse(testStation.scanningArea.isDisabled());				//TODO : May need to change scanningArea to baggingArea
+		assertFalse(testStation.scanningArea.isDisabled());
 	}
 	
 	@Test
@@ -284,8 +284,6 @@ public class AddItemTest {
 	}
 	
 	// test to check adding a valid bag with own weight
-	// TODO : want to check if bag is updating the weight properly
-	// TODO : currently test cases are covering the addBag method
 	@Test
 	public void testAddBagValid() {
 		ItemToTest dummyBag = new ItemToTest(10.0);
