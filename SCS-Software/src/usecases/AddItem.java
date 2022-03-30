@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
@@ -140,11 +142,14 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	 */
 	@Override
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
+		FiveSecTimer t = new FiveSecTimer();
+		t.start();
+		
 		if(weightInGrams > expectedWeight) {
 			disableAllButScale();
 			System.out.println("Unexpected Item placed in bagging area, Please remove last item placed on scale.");
 		}
-		else if(weightInGrams < expectedWeight) {
+		else if(weightInGrams < expectedWeight && t.secondsPassed >= 5) {
 			disableAllButScale();
 			System.out.println("Please place item in bagging area.");
 		}
@@ -247,6 +252,22 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	 */
 	public static void resetTotalWeight() {
 		totalWeight = 0;
+	}
+	
+}
+
+class FiveSecTimer extends Thread {
+	public int secondsPassed;
+	
+	Timer timer = new Timer();
+	TimerTask task = new TimerTask() {
+		public void run() {
+			secondsPassed++;
+		}
+	};
+	
+	public void start() {
+		timer.scheduleAtFixedRate(task,0,1000);
 	}
 	
 }
