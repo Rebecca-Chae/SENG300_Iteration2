@@ -236,7 +236,6 @@ public class PaymentTest {
 		try {
 			dummyPayment.cardWithTap(card, 10.00);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -247,7 +246,6 @@ public class PaymentTest {
 		try {
 			dummyPayment.cardWithTap(card, 10.00);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -266,7 +264,6 @@ public class PaymentTest {
 		try {
 			dummyPayment.cardWithSwipe(card, 10.00);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -277,7 +274,6 @@ public class PaymentTest {
 		try {
 			dummyPayment.cardWithSwipe(card, 10.00);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -296,7 +292,6 @@ public class PaymentTest {
 		try {
 			dummyPayment.cardWithInsert(card, "0000", 10.00);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -307,7 +302,6 @@ public class PaymentTest {
 		try {
 			dummyPayment.cardWithInsert(card, "0000", 10.00);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -318,7 +312,6 @@ public class PaymentTest {
 		try {
 			dummyPayment.cardWithInsert(card, null, 10.00);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
