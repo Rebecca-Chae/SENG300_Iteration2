@@ -33,9 +33,9 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	 */
 	public AddItem(SelfCheckoutStation scs){
 		checkoutStation = scs;
-		checkoutStation.mainScanner.attach(this);					//TODO : Need to change scanner to mainScanner and / or handheldScanner
-		checkoutStation.scanningArea.attach(this);					//TODO : Need to change scale to baggingArea and / or scanningArea
-		checkoutStation.baggingArea.attach(this);						// Not so sure if this is necessary but just added for now
+		checkoutStation.mainScanner.attach(this);
+		checkoutStation.scanningArea.attach(this);
+		checkoutStation.baggingArea.attach(this);
 		scannedItemsCatalog = new StringBuilder();
 		scannedItems = new ArrayList<>();
 	}
@@ -142,6 +142,7 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	 */
 	@Override
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
+		// Timer implementation with Multithreading
 		FiveSecTimer t = new FiveSecTimer();
 		t.start();
 		
@@ -149,6 +150,7 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 			disableAllButScale();
 			System.out.println("Unexpected Item placed in bagging area, Please remove last item placed on scale.");
 		}
+		// If 5 seconds pass should also do prompt
 		else if(weightInGrams < expectedWeight || t.secondsPassed >= 5) {
 			disableAllButScale();
 			System.out.println("Please place item in bagging area.");
@@ -193,15 +195,15 @@ public class AddItem implements ElectronicScaleObserver, BarcodeScannerObserver 
 	 */
 	@Override
 	public void outOfOverload(ElectronicScale scale) {
-		checkoutStation.mainScanner.enable();						//TODO : Need to change scanner to mainScanner and / or handheldScanner
+		checkoutStation.mainScanner.enable();
 	}
 	
 	/**
 	 * Simulates the action of disabling all devices but the scale.
 	 */
 	public void disableAllButScale(){
-		checkoutStation.scanningArea.enable();								//TODO : Need to change scale to baggingArea and / or scanningArea
-		checkoutStation.mainScanner.disable();							//TODO : Need to change scanner to mainScanner and / or handheldScanner
+		checkoutStation.scanningArea.enable();
+		checkoutStation.mainScanner.disable();
 		checkoutStation.banknoteInput.disable();
 		checkoutStation.coinSlot.disable();
 		checkoutStation.banknoteValidator.disable();
