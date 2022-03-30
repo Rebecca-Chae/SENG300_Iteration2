@@ -57,8 +57,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		amountDue = totalPrice;
 		amountPaid = 0;
 		isCheckingOut = true;
-		station.baggingArea.disable();											//TODO : Need to change scale to baggingArea and / or scanningArea
-		station.mainScanner.disable();											//TODO : Need to change scanner to mainScanner and / or handheldScanner
+		station.baggingArea.disable();
+		station.mainScanner.disable();
 		station.banknoteValidator.enable();
 		station.coinValidator.enable();
 		station.cardReader.enable();
@@ -299,8 +299,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 	public void returnToScanning() {
 		//any amount inserted would be returned or stored. but this is not implemented yet as not required in this iteration.
 		isCheckingOut = false;
-		station.baggingArea.enable();										//TODO : Need to change scale to baggingArea and / or scanningArea
-		station.mainScanner.enable();										//TODO : Need to change scanner to mainScanner and / or handheldScanner
+		station.baggingArea.enable();
+		station.mainScanner.enable();
 		station.coinValidator.disable();
 		station.banknoteValidator.disable();		
 	}
@@ -325,8 +325,8 @@ public class Payment implements CoinValidatorObserver, BanknoteValidatorObserver
 		AddItem.resetTotalWeight();
 		amountDue = 0;
 		amountPaid = 0;
-		station.baggingArea.enable();										//TODO : Need to change scale to baggingArea and / or scanningArea
-		station.mainScanner.enable();											//TODO : Need to change scanner to mainScanner and / or handheldScanner
+		station.baggingArea.enable();
+		station.mainScanner.enable();
 		station.coinValidator.disable();
 		station.banknoteValidator.disable();
 		isCheckingOut = false;
